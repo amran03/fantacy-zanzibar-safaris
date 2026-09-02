@@ -27,9 +27,18 @@ function preflight() {
 }
 
 /* ---------- blob stores ---------- */
-function usersStore() { return getStore("fzs-users"); }
-function bookingsStore() { return getStore("fzs-bookings"); }
-function activityBookingsStore() { return getStore("fzs-activity-bookings"); }
+function getUsersStoreOptions() {
+  const opts = { name: "fzs-users" };
+  if (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_ACCESS_TOKEN) {
+    opts.siteID = process.env.NETLIFY_SITE_ID;
+    opts.token = process.env.NETLIFY_ACCESS_TOKEN;
+  }
+  return opts;
+}
+
+function usersStore() { return getStore(getUsersStoreOptions()); }
+function bookingsStore() { return getStore({ name: "fzs-bookings", siteID: process.env.NETLIFY_SITE_ID, token: process.env.NETLIFY_ACCESS_TOKEN }); }
+function activityBookingsStore() { return getStore({ name: "fzs-activity-bookings", siteID: process.env.NETLIFY_SITE_ID, token: process.env.NETLIFY_ACCESS_TOKEN }); }
 
 /* ---------- auth helpers ---------- */
 function signUserToken(email) {
