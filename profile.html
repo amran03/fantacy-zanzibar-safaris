@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Profile | Fantasy Zanzibar Safaris</title>
+<link rel="icon" href="assets/img/logo-badge.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ HEADER / NAV ============ -->
+<header class="site">
+  <div class="nav">
+    <a href="index.html" class="nav-brand">
+      <img src="assets/img/logo-badge.png" alt="Fantasy Zanzibar Safaris">
+      <div class="word"><b>FANTASY</b><span>ZANZIBAR SAFARIS</span></div>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="index.html#about">About Zanzibar</a>
+      <a href="index.html#activities">Activities &amp; Sports</a>
+      <a href="index.html#hotels">Partner Hotels</a>
+      <a href="index.html#packages">Packages</a>
+      <a href="index.html#gallery">Gallery</a>
+      <a href="tracker.html">Track My Trip</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <div id="guestActions">
+        <button class="btn btn-login-nav" onclick="openAuth('login')">Log In</button>
+      </div>
+      <div id="userActions" style="display:none;">
+        <a href="profile.html" class="user-chip"><span class="dot"></span><span id="userChipName"></span></a>
+        <button class="btn btn-outline" onclick="logout()" style="margin-left:8px;">Log Out</button>
+      </div>
+      <button id="navToggle" onclick="toggleMobileNav()">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ PAGE BANNER ============ -->
+<section class="page-banner" style="--banner-img:url('https://commons.wikimedia.org/wiki/Special:FilePath/Stone%20Town%20Zanzibar%202.jpeg?width=1600');min-height:220px;padding:130px 0 40px;">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Home</a> / <span>My Profile</span></div>
+    <div class="eyebrow">MY ACCOUNT</div>
+    <h1 id="welcomeTitle">My Profile</h1>
+  </div>
+</section>
+
+<!-- ============ ACCESS GATE (shown only when logged out) ============ -->
+<section class="section" id="loginGate" style="display:none;">
+  <div class="wrap" style="max-width:640px;">
+    <div class="empty-state">
+      <div class="ic-big">🔒</div>
+      <h3>Please log in to view your profile</h3>
+      <p>Your profile page holds your personal details, booking history and live trip tracking — please log in to continue.</p>
+      <button class="btn btn-dark" onclick="openAuth('login')">Log In / Sign Up</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PROFILE CONTENT (shown only when logged in) ============ -->
+<section class="section-tight" id="profileContent" style="display:none;">
+  <div class="wrap profile-shell">
+
+    <!-- LEFT: profile card + nav -->
+    <div class="profile-card">
+      <div class="profile-avatar" id="avatarInitials">FZ</div>
+      <h3 id="profileName">Traveler Name</h3>
+      <div class="email" id="profileEmail">email@example.com</div>
+      <div class="profile-stats">
+        <div class="profile-stat"><b id="statTotal">0</b><span>TRIPS</span></div>
+        <div class="profile-stat"><b id="statUpcoming">0</b><span>UPCOMING</span></div>
+        <div class="profile-stat"><b id="statDone">0</b><span>COMPLETED</span></div>
+      </div>
+      <nav class="profile-nav">
+        <button class="active" data-panel="overview" onclick="switchPanel('overview', this)">📋 Overview</button>
+        <button data-panel="bookings" onclick="switchPanel('bookings', this)">🧳 My Bookings</button>
+        <button data-panel="tracking" onclick="switchPanel('tracking', this)">📍 Trip Tracking</button>
+        <button data-panel="activities" onclick="switchPanel('activities', this)">🏄 Water Sports & Activities</button>
+        <button data-panel="settings" onclick="switchPanel('settings', this)">⚙️ Account Settings</button>
+        <button class="logout-btn" onclick="logout()">🚪 Log Out</button>
+      </nav>
+    </div>
+
+    <!-- RIGHT: panels -->
+    <div class="profile-main">
+
+      <!-- OVERVIEW PANEL -->
+      <div class="profile-panel active" id="panel-overview">
+        <div class="panel-head">
+          <h2>Welcome back, <span id="overviewFirstName">Traveler</span></h2>
+          <p>Here's a quick look at your account and your travel plans with Fantasy Zanzibar Safaris.</p>
+        </div>
+        <div id="nextTripCard"></div>
+        <div id="activitiesPromo" style="margin-top:22px;"></div>
+        <div style="margin-top:30px;">
+          <h4 style="margin-bottom:16px;">Recent Bookings</h4>
+          <div id="overviewBookings"></div>
+        </div>
+      </div>
+
+      <!-- BOOKINGS PANEL -->
+      <div class="profile-panel" id="panel-bookings">
+        <div class="panel-head">
+          <h2>My Bookings</h2>
+          <p>All the packages you've booked with us, past and upcoming.</p>
+        </div>
+        <div id="bookingsList"></div>
+      </div>
+
+      <!-- TRACKING PANEL -->
+      <div class="profile-panel" id="panel-tracking">
+        <div class="panel-head">
+          <h2>Trip Tracking</h2>
+          <p>Follow the live status and full day-by-day itinerary of any of your booked trips.</p>
+        </div>
+        <div class="track-shell" style="padding:28px;">
+          <div class="track-select" id="trackSelect"></div>
+          <div id="trackContent"></div>
+        </div>
+      </div>
+
+      <!-- ACTIVITIES PANEL -->
+      <div class="profile-panel" id="panel-activities">
+        <div class="panel-head">
+          <h2>Water Sports & Activities</h2>
+          <p>Make the most of your time on the island — add an adventure to your trip.</p>
+        </div>
+        <div class="persuade-banner">
+          <div style="flex:1;min-width:220px;">
+            <h4>🌊 Turn your holiday into an adventure</h4>
+            <p>Kitesurfing, snorkeling at Mnemba, swimming with dolphins and more — book any of these below and we'll take care of the rest.</p>
+          </div>
+        </div>
+        <div class="activity-book-grid" id="activityBookGrid"></div>
+        <div style="margin-top:34px;">
+          <h4 style="margin-bottom:16px;">My Activity Bookings</h4>
+          <div id="myActivityBookings"></div>
+        </div>
+      </div>
+
+      <!-- SETTINGS PANEL -->
+      <div class="profile-panel" id="panel-settings">
+        <div class="panel-head">
+          <h2>Account Settings</h2>
+          <p>Update your personal details. Your email address is used to log in and cannot be changed here.</p>
+        </div>
+        <div class="info-note">This is a demo account system — details are stored for this prototype only and are not sent to any external service.</div>
+        <div class="settings-form">
+          <div class="alert alert-ok" id="settingsAlert"></div>
+          <div class="form-row"><label>Full Name</label><input type="text" id="settingsName"></div>
+          <div class="form-row"><label>Phone Number</label><input type="text" id="settingsPhone"></div>
+          <div class="form-row"><label>Email Address</label><input type="email" id="settingsEmail" disabled style="background:var(--cream-200);color:var(--teal-700);"></div>
+          <div class="form-row"><label>Member Since</label><input type="text" id="settingsJoined" disabled style="background:var(--cream-200);color:var(--teal-700);"></div>
+          <button class="btn btn-dark" onclick="saveSettings()">Save Changes</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <img class="f-logo" src="assets/img/logo-horizontal.png" alt="Fantasy Zanzibar Safaris">
+        <p>A tourism company rooted in Zanzibar, connecting you with the beaches, history and culture of this remarkable island.</p>
+      </div>
+      <div>
+        <h5>NAVIGATION</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#about">About Zanzibar</a></li>
+          <li><a href="index.html#packages">Packages</a></li>
+          <li><a href="index.html#gallery">Gallery</a></li>
+          <li><a href="tracker.html">Track My Trip</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>PACKAGES</h5>
+        <ul id="footerPkgLinks"></ul>
+      </div>
+      <div>
+        <h5>CONTACT US</h5>
+        <ul>
+          <li>Stone Town, Zanzibar, Tanzania</li>
+          <li>+255 777 000 000</li>
+          <li>hello@fantasyzanzibarsafaris.co.tz</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Fantasy Zanzibar Safaris. All rights reserved.</span>
+      <span>Discover • Experience • Treasure</span>
+      <a href="admin.html" style="color:var(--cream-200);opacity:.55;">Admin</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ AUTH MODAL (shared) ============ -->
+<div class="overlay" id="authOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOverlay('authOverlay')">✕</button>
+    <div class="modal-body">
+      <div class="eyebrow">YOUR ACCOUNT</div>
+      <h2 id="authTitle">Welcome back</h2>
+      <div class="alert alert-err" id="authAlert"></div>
+
+      <div id="loginForm">
+        <div class="form-row"><label>Email Address</label><input type="email" id="loginEmail" placeholder="you@example.com"></div>
+        <div class="form-row"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+        <button class="btn btn-dark btn-block" onclick="doLogin()">Log In to Your Account</button>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="switchAuth('register');return false;">Sign up now</a></p>
+      </div>
+
+      <div id="registerForm" style="display:none;">
+        <div class="form-grid-2">
+          <div class="form-row"><label>Full Name</label><input type="text" id="regName" placeholder="Your name"></div>
+          <div class="form-row"><label>Phone Number</label><input type="text" id="regPhone" placeholder="+255 7xx xxx xxx"></div>
+        </div>
+        <div class="form-row"><label>Email Address</label><input type="email" id="regEmail" placeholder="you@example.com"></div>
+        <div class="form-row"><label>Create Password</label><input type="password" id="regPassword" placeholder="At least 6 characters"></div>
+        <button class="btn btn-dark btn-block" onclick="doRegister()">Create Account</button>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="switchAuth('login');return false;">Log in here</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- ============ ACTIVITY BOOKING MODAL ============ -->
+<div class="overlay" id="activityOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOverlay('activityOverlay')">✕</button>
+    <div class="modal-body">
+      <div class="eyebrow">BOOK AN ACTIVITY</div>
+      <h2 id="activityModalTitle">Activity Name</h2>
+      <p id="activityModalDesc" style="font-size:.9rem;"></p>
+      <div class="form-row"><label>Date</label><input type="date" id="activityDate"></div>
+      <div class="form-row"><label>Number of Participants</label>
+        <select id="activityParticipants">
+          <option value="1">1 Person</option>
+          <option value="2" selected>2 People</option>
+          <option value="3">3 People</option>
+          <option value="4">4 People</option>
+          <option value="5">5 People</option>
+          <option value="6">6 People</option>
+        </select>
+      </div>
+      <div class="track-card">
+        <div class="summary-line"><span id="activitySumName">Activity</span><span id="activitySumPrice">$0</span></div>
+        <div class="summary-line"><span>Participants</span><span id="activitySumQty">x2</span></div>
+        <div class="summary-total"><span>Total</span><span id="activitySumTotal">$0</span></div>
+      </div>
+      <button class="btn btn-gold btn-block" style="margin-top:18px;" onclick="confirmActivityBooking()">Confirm Activity Booking</button>
+      <p class="form-note" style="text-align:center;margin-top:14px;">This is a demo booking — no real payment is charged. Add it to your trip, and we'll follow up to arrange payment and timing.</p>
+    </div>
+  </div>
+</div>
+
+<script src="js/main.js"></script>
+<script>
+  function statusForBooking(b){
+    if(b.progressStep >= 4) return {label:"Completed", cls:"done"};
+    if(b.progressStep >= 1 && b.progressStep < 4) return {label:"In Progress", cls:"active"};
+    return {label:"Upcoming", cls:"upcoming"};
+  }
+
+  let activeActivity = null;
+
+  function renderActivityBookGrid(){
+    document.getElementById("activityBookGrid").innerHTML = ACTIVITIES.map(a => `
+      <div class="activity-book-card">
+        <img src="${a.image}" alt="${a.name}" loading="lazy">
+        <div class="abc-body">
+          <h4>${a.icon} ${a.name}</h4>
+          <p>${a.desc}</p>
+          <div class="abc-foot">
+            <span class="abc-price">${a.price}</span>
+            <button class="btn btn-dark btn-sm" onclick="openActivityBooking('${a.id}')">Book Now</button>
+          </div>
+        </div>
+      </div>`).join("");
+  }
+
+  function openActivityBooking(id){
+    activeActivity = ACTIVITIES.find(a=>a.id===id);
+    if(!activeActivity) return;
+    document.getElementById("activityModalTitle").textContent = activeActivity.name;
+    document.getElementById("activityModalDesc").textContent = activeActivity.desc;
+    document.getElementById("activitySumName").textContent = activeActivity.name;
+    document.getElementById("activitySumPrice").textContent = "$"+activeActivity.priceValue+" x "+activeActivity.unit;
+    document.getElementById("activityParticipants").value = "2";
+    const dateInput = document.getElementById("activityDate");
+    const min = new Date(); min.setDate(min.getDate()+3);
+    dateInput.min = min.toISOString().split("T")[0];
+    dateInput.value = min.toISOString().split("T")[0];
+    updateActivitySummary();
+    openOverlay("activityOverlay");
+  }
+
+  function updateActivitySummary(){
+    if(!activeActivity) return;
+    const qty = parseInt(document.getElementById("activityParticipants").value);
+    document.getElementById("activitySumQty").textContent = "x"+qty;
+    document.getElementById("activitySumTotal").textContent = moneyFmt(activeActivity.priceValue * qty);
+  }
+  document.getElementById("activityParticipants").addEventListener("change", updateActivitySummary);
+
+  async function confirmActivityBooking(){
+    const date = document.getElementById("activityDate").value;
+    if(!date){ showToast("Please choose a date."); return; }
+    const qty = parseInt(document.getElementById("activityParticipants").value);
+    try{
+      await createActivityBooking({
+        activityId: activeActivity.id,
+        activityName: activeActivity.name,
+        date, participants: qty,
+        total: activeActivity.priceValue * qty
+      });
+      closeOverlay("activityOverlay");
+      showToast("Activity added to your trip! 🌊");
+      loadMyActivityBookings();
+    }catch(e){
+      showToast(e.message || "Could not book this activity. Please try again.");
+    }
+  }
+
+  async function loadMyActivityBookings(){
+    const all = await getMyActivityBookings();
+    const el = document.getElementById("myActivityBookings");
+    if(all.length===0){
+      el.innerHTML = `<p style="color:var(--teal-700);font-size:.9rem;">You haven't booked any activities yet — pick one above to get started.</p>`;
+      return;
+    }
+    el.innerHTML = all.map(b=>{
+      const a = ACTIVITIES.find(x=>x.id===b.activityId);
+      return `
+        <div class="booking-row">
+          <img src="${a ? a.image : ''}" alt="${b.activityName}">
+          <div class="info">
+            <h4>${b.activityName}</h4>
+            <div class="meta">${b.date} • ${b.participants} participant(s) • ${moneyFmt(b.total)}</div>
+          </div>
+          <span class="status-pill upcoming">Booked</span>
+        </div>`;
+    }).join("");
+  }
+
+  function bookingRowHtml(b){
+    const pkg = PACKAGES.find(p=>p.id===b.packageId);
+    const st = statusForBooking(b);
+    return `
+      <div class="booking-row">
+        <img src="${pkg.image}" alt="${pkg.name}">
+        <div class="info">
+          <h4>${pkg.name}</h4>
+          <div class="meta">${b.date} • ${b.travelers} traveler(s) • ${moneyFmt(b.total)}</div>
+        </div>
+        <span class="status-pill ${st.cls}">${st.label}</span>
+        <a class="btn btn-ghost btn-sm" href="tracker.html?booking=${b.id}">Track</a>
+      </div>`;
+  }
+
+  async function loadProfileOverview(){
+    const bookings = await getMyBookings();
+
+    document.getElementById("statTotal").textContent = bookings.length;
+    document.getElementById("statUpcoming").textContent = bookings.filter(b=>b.progressStep < 4).length;
+    document.getElementById("statDone").textContent = bookings.filter(b=>b.progressStep >= 4).length;
+
+    const nextTrip = bookings.filter(b=>b.progressStep < 4).sort((a,b)=> new Date(a.date) - new Date(b.date))[0];
+    const nextTripEl = document.getElementById("nextTripCard");
+    if(nextTrip){
+      const pkg = PACKAGES.find(p=>p.id===nextTrip.packageId);
+      nextTripEl.innerHTML = `
+        <div class="track-card" style="display:flex;gap:22px;align-items:center;flex-wrap:wrap;">
+          <img src="${pkg.image}" alt="${pkg.name}" style="width:120px;height:120px;object-fit:cover;border-radius:8px;flex:none;">
+          <div style="flex:1;min-width:220px;">
+            <div class="eyebrow" style="margin-bottom:6px;">YOUR NEXT TRIP</div>
+            <h3 style="font-size:1.2rem;">${pkg.name}</h3>
+            <p style="margin:0 0 12px;">Starts ${nextTrip.date} • ${pkg.days} Days / ${pkg.nights} Nights • ${nextTrip.travelers} traveler(s)</p>
+            <a class="btn btn-dark btn-sm" href="tracker.html?booking=${nextTrip.id}">View Full Itinerary &amp; Status</a>
+          </div>
+        </div>`;
+    } else {
+      nextTripEl.innerHTML = `
+        <div class="empty-state">
+          <div class="ic-big">🌴</div>
+          <h3>No upcoming trips</h3>
+          <p>Browse our packages and book your next Zanzibar adventure.</p>
+          <a href="index.html#packages" class="btn btn-dark">Browse Packages</a>
+        </div>`;
+    }
+
+    const overviewList = document.getElementById("overviewBookings");
+    if(bookings.length===0){
+      overviewList.innerHTML = `<p style="color:var(--teal-700);">You haven't booked any trips yet.</p>`;
+    } else {
+      overviewList.innerHTML = bookings.slice(0,3).map(bookingRowHtml).join("");
+    }
+
+    const promoEl = document.getElementById("activitiesPromo");
+    if(promoEl){
+      promoEl.innerHTML = `
+        <div class="persuade-banner">
+          <div style="flex:1;min-width:220px;">
+            <h4>🏄 Add some adventure to your trip</h4>
+            <p>Kitesurfing, dolphin swims, sunset cruises and more — book a water sport activity in a couple of clicks.</p>
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="switchPanel('activities', document.querySelector('.profile-nav button[data-panel=activities]'))">Explore Activities</button>
+        </div>`;
+    }
+  }
+
+  async function loadBookingsPanel(){
+    const bookings = await getMyBookings();
+    const list = document.getElementById("bookingsList");
+    if(bookings.length===0){
+      list.innerHTML = `
+        <div class="empty-state">
+          <div class="ic-big">🧳</div>
+          <h3>No bookings yet</h3>
+          <p>Once you book a package, it will appear here with live status and tracking.</p>
+          <a href="index.html#packages" class="btn btn-dark">Browse Packages</a>
+        </div>`;
+      return;
+    }
+    list.innerHTML = bookings.map(bookingRowHtml).join("");
+  }
+
+  function loadSettingsPanel(){
+    document.getElementById("settingsName").value = currentUser.name || "";
+    document.getElementById("settingsPhone").value = currentUser.phone || "";
+    document.getElementById("settingsEmail").value = currentUser.email || "";
+    const joined = currentUser.joined ? new Date(currentUser.joined).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'}) : "—";
+    document.getElementById("settingsJoined").value = joined;
+  }
+
+  async function saveSettings(){
+    const name = document.getElementById("settingsName").value.trim();
+    const phone = document.getElementById("settingsPhone").value.trim();
+    if(!name){ showToast("Name cannot be empty."); return; }
+
+    try{
+      const data = await apiFetch("/me", { method:"PUT", token:getToken(), body:{name, phone} });
+      currentUser = data.user;
+      updateAuthUI();
+      refreshProfileHeader();
+
+      const alertEl = document.getElementById("settingsAlert");
+      alertEl.textContent = "Your details have been updated.";
+      alertEl.classList.add("show");
+      setTimeout(()=>alertEl.classList.remove("show"), 3000);
+      showToast("Profile updated.");
+    }catch(e){
+      showToast(e.message || "Could not update your profile.");
+    }
+  }
+
+  function switchPanel(name, btn){
+    document.querySelectorAll(".profile-nav button[data-panel]").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".profile-panel").forEach(p=>p.classList.remove("active"));
+    document.getElementById("panel-"+name).classList.add("active");
+    if(name==="bookings") loadBookingsPanel();
+    if(name==="tracking"){
+      const params = new URLSearchParams(window.location.search);
+      renderTracking("trackSelect", "trackContent", params.get("booking"));
+    }
+    if(name==="settings") loadSettingsPanel();
+    if(name==="activities"){
+      renderActivityBookGrid();
+      loadMyActivityBookings();
+    }
+  }
+
+  function refreshProfileHeader(){
+    document.getElementById("welcomeTitle").textContent = "My Profile";
+    document.getElementById("profileName").textContent = currentUser.name;
+    document.getElementById("profileEmail").textContent = currentUser.email;
+    document.getElementById("overviewFirstName").textContent = currentUser.name.split(" ")[0];
+    const initials = currentUser.name.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
+    document.getElementById("avatarInitials").textContent = initials || "FZ";
+  }
+
+  async function refreshProfileView(){
+    const gate = document.getElementById("loginGate");
+    const content = document.getElementById("profileContent");
+    if(currentUser){
+      gate.style.display = "none";
+      content.style.display = "block";
+      refreshProfileHeader();
+      await loadProfileOverview();
+      const params = new URLSearchParams(window.location.search);
+      if(params.get("panel")){
+        const btn = document.querySelector(`.profile-nav button[data-panel="${params.get("panel")}"]`);
+        if(btn) switchPanel(params.get("panel"), btn);
+      }
+    } else {
+      gate.style.display = "block";
+      content.style.display = "none";
+    }
+  }
+  function onAfterLogin(){ refreshProfileView(); }
+  function onAfterLogout(){ window.location.href = "index.html"; }
+
+  async function init(){
+    await initShared();
+    renderFooterLinks();
+    if(!currentUser){
+      document.getElementById("loginGate").style.display = "block";
+      openAuth("login");
+      showToast("Please log in to view your profile.");
+    } else {
+      await refreshProfileView();
+    }
+  }
+  init();
+</script>
+</body>
+</html>

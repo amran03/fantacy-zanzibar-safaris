@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fantasy Zanzibar Safaris | Discover Zanzibar</title>
+<meta name="description" content="Fantasy Zanzibar Safaris — beach escapes, Stone Town heritage tours, spice farms and Jozani Forest, honeymoon getaways, and full-island packages across Zanzibar, Tanzania.">
+<link rel="icon" href="assets/img/logo-badge.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ HEADER / NAV ============ -->
+<header class="site">
+  <div class="nav">
+    <a href="index.html" class="nav-brand">
+      <img src="assets/img/logo-badge.png" alt="Fantasy Zanzibar Safaris">
+      <div class="word"><b>FANTASY</b><span>ZANZIBAR SAFARIS</span></div>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html" class="current">Home</a>
+      <a href="index.html#about">About Zanzibar</a>
+      <a href="index.html#activities">Activities &amp; Sports</a>
+      <a href="index.html#hotels">Partner Hotels</a>
+      <a href="index.html#packages">Packages</a>
+      <a href="index.html#gallery">Gallery</a>
+      <a href="tracker.html">Track My Trip</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <div id="guestActions">
+        <button class="btn btn-login-nav" onclick="openAuth('login')">Log In</button>
+      </div>
+      <div id="userActions" style="display:none;">
+        <a href="profile.html" class="user-chip"><span class="dot"></span><span id="userChipName"></span></a>
+        <button class="btn btn-outline" onclick="logout()" style="margin-left:8px;">Log Out</button>
+      </div>
+      <button id="navToggle" onclick="toggleMobileNav()">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" style="--hero-img:url('assets/img/hero-placeholder.jpg');" id="heroSection">
+  <div class="hero-inner">
+    <div class="eyebrow" style="color:var(--gold-300);">THE ISLANDS OF ZANZIBAR • TANZANIA</div>
+    <h1>Discover golden beaches and the stories of the <em>Stone Town</em></h1>
+    <p class="lead">Fantasy Zanzibar Safaris plans complete trips across Zanzibar — from the beaches of Nungwi and Kendwa, the historic lanes of Stone Town, spice farms, to sunsets over traditional dhow boats.</p>
+    <div class="hero-cta">
+      <a href="#packages" class="btn btn-gold">View Safari Packages</a>
+      <a href="tracker.html" class="btn btn-outline">Track My Trip</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><b>12+</b><span>YEARS OF EXPERIENCE</span></div>
+      <div class="stat"><b>4,800+</b><span>HAPPY TRAVELERS</span></div>
+      <div class="stat"><b>30+</b><span>PARTNER HOTELS</span></div>
+      <div class="stat"><b>4.9/5</b><span>AVERAGE RATING</span></div>
+    </div>
+  </div>
+</section>
+<svg class="wave" viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0,32 C240,70 420,0 720,24 C1020,48 1200,8 1440,30 L1440,70 L0,70 Z" fill="#faf6ee"></path></svg>
+
+<!-- ============ ABOUT ZANZIBAR ============ -->
+<section class="section" id="about">
+  <div class="wrap about-grid">
+    <div class="about-copy">
+      <div class="eyebrow">ABOUT THE ISLAND</div>
+      <h2>Zanzibar isn't just a holiday — it's a story living in every street and every wave</h2>
+      <p>The island of Zanzibar, off the coast of Tanzania, blends Swahili, Arab and Indian culture in the narrow lanes of <b>Stone Town</b> — a UNESCO World Heritage Site. Beyond the city, you'll find turquoise water, spice farms scented with clove and cardamom, and the Jozani Forest, home to the rare Red Colobus monkey.</p>
+      <p>Our team of local guides knows every corner of the island — from quiet beaches on the east coast to the beautiful sunsets on Nungwi's western shore.</p>
+      <div class="pillars">
+        <div class="pillar"><h4>Local Guides</h4><p>Licensed guides who speak English, Swahili and other languages.</p></div>
+        <div class="pillar"><h4>Verified Hotels</h4><p>We partner only with hotels and resorts inspected for quality and safety.</p></div>
+        <div class="pillar"><h4>24/7 Support</h4><p>Our team is always close by throughout your Zanzibar trip.</p></div>
+      </div>
+    </div>
+    <div class="about-images">
+      <img class="tall" src="" data-img="stonetown" alt="A street in Stone Town, Zanzibar" loading="lazy">
+      <div class="stack">
+        <img src="" data-img="beach2" alt="Nungwi beach, Zanzibar" loading="lazy">
+        <img src="" data-img="wildlife" alt="Red Colobus monkey, Jozani, Zanzibar" loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PACKAGES ============ -->
+<section class="section section-dark" id="packages">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow" style="color:var(--gold-300);">SAFARI PACKAGES</div>
+        <h2>Choose the trip that matches your Zanzibar dream</h2>
+      </div>
+      <p style="max-width:380px;">Every package includes accommodation, transport, specified meals, and a full day-by-day guide.</p>
+    </div>
+    <div class="filter-row" id="filterRow"></div>
+    <div class="pkg-grid" id="pkgGrid"></div>
+  </div>
+</section>
+
+<!-- ============ ACTIVITIES & SPORTS ============ -->
+<section class="section" id="activities">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">ADVENTURE ON THE ISLAND</div>
+        <h2>Water Sports & Adventure Activities</h2>
+      </div>
+      <p style="max-width:380px;">Add any of these on top of your package, or book them as stand-alone half-day and full-day excursions.</p>
+    </div>
+    <div class="activity-grid" id="activityGrid"></div>
+  </div>
+</section>
+
+<!-- ============ PARTNER HOTELS ============ -->
+<section class="section section-tight" id="hotels" style="background:var(--cream-200);">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">WHERE YOU'LL STAY</div>
+        <h2>Partner Hotels & Resorts</h2>
+      </div>
+      <p style="max-width:380px;">Every property we work with is personally inspected by our team for location, comfort and service quality.</p>
+    </div>
+    <div class="partner-grid" id="partnerGrid"></div>
+  </div>
+</section>
+
+<!-- ============ EXPERIENCE ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">THE FULL EXPERIENCE</div>
+        <h2>Every package we offer includes this</h2>
+      </div>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 20h20M4 20V10l8-6 8 6v10M9 20v-6h6v6"/></svg>
+        <h4>Quality Accommodation</h4><p>Hotels and resorts selected for their location and high standard of service.</p>
+      </div>
+      <div class="exp-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        <h4>Complete Itinerary</h4><p>A day-by-day plan you can follow live from your own account.</p>
+      </div>
+      <div class="exp-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <h4>Reliable Transport</h4><p>Airport pickups, island-wide transfers, and private boat excursions.</p>
+      </div>
+      <div class="exp-card">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21c-4-4-8-7.6-8-12A8 8 0 0112 2a8 8 0 018 7c0 4.4-4 8-8 12z"/><circle cx="12" cy="9" r="2.4"/></svg>
+        <h4>Local Guides</h4><p>Genuine knowledge of culture, history and places most tourists never see.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GALLERY ============ -->
+<section class="section section-tight" id="gallery" style="background:var(--cream-200);">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">PHOTOS OF ZANZIBAR</div>
+        <h2>A small taste of what you'll see</h2>
+      </div>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</section>
+
+<!-- ============ TESTIMONIALS ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">WHAT TRAVELERS SAY</div>
+        <h2>Reviews from guests who've traveled with us</h2>
+      </div>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p>"Every day of our trip was well organized — from the airport to the hotel. The team looked after us like family."</p>
+        <div class="testi-who"><div class="av">A</div><div><b>Amina R.</b><span>Nungwi & Kendwa Package</span></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p>"We loved being able to track our itinerary online day by day. We never had to worry about what came next."</p>
+        <div class="testi-who"><div class="av">J</div><div><b>James M.</b><span>Luxury Honeymoon Escape</span></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="stars">★★★★★</div>
+        <p>"The spice tour and Jozani Forest visit were a completely different kind of experience. Our guide knew everything about the plants and wildlife."</p>
+        <div class="testi-who"><div class="av">F</div><div><b>Fatma S.</b><span>Stone Town Heritage Package</span></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA BAND ============ -->
+<section class="section-tight">
+  <div class="wrap">
+    <div class="cta-band">
+      <div>
+        <h3>Ready for an unforgettable Zanzibar trip?</h3>
+        <p>Talk to our travel consultants today and let's plan the package that fits you best.</p>
+      </div>
+      <a href="#packages" class="btn btn-gold">Get Started</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site" id="contact">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <img class="f-logo" src="assets/img/logo-horizontal.png" alt="Fantasy Zanzibar Safaris">
+        <p>A tourism company rooted in Zanzibar, connecting you with the beaches, history and culture of this remarkable island.</p>
+      </div>
+      <div>
+        <h5>NAVIGATION</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#about">About Zanzibar</a></li>
+          <li><a href="index.html#packages">Packages</a></li>
+          <li><a href="index.html#gallery">Gallery</a></li>
+          <li><a href="tracker.html">Track My Trip</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>PACKAGES</h5>
+        <ul id="footerPkgLinks"></ul>
+      </div>
+      <div>
+        <h5>CONTACT US</h5>
+        <ul>
+          <li>Stone Town, Zanzibar, Tanzania</li>
+          <li>+255 777 000 000</li>
+          <li>hello@fantasyzanzibarsafaris.co.tz</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Fantasy Zanzibar Safaris. All rights reserved.</span>
+      <span>Discover • Experience • Treasure</span>
+      <a href="admin.html" style="color:var(--cream-200);opacity:.55;">Admin</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ AUTH MODAL (shared) ============ -->
+<div class="overlay" id="authOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOverlay('authOverlay')">✕</button>
+    <div class="modal-body">
+      <div class="eyebrow">YOUR ACCOUNT</div>
+      <h2 id="authTitle">Welcome back</h2>
+      <div class="alert alert-err" id="authAlert"></div>
+
+      <div id="loginForm">
+        <div class="form-row"><label>Email Address</label><input type="email" id="loginEmail" placeholder="you@example.com"></div>
+        <div class="form-row"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+        <button class="btn btn-dark btn-block" onclick="doLogin()">Log In to Your Account</button>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="switchAuth('register');return false;">Sign up now</a></p>
+      </div>
+
+      <div id="registerForm" style="display:none;">
+        <div class="form-grid-2">
+          <div class="form-row"><label>Full Name</label><input type="text" id="regName" placeholder="Your name"></div>
+          <div class="form-row"><label>Phone Number</label><input type="text" id="regPhone" placeholder="+255 7xx xxx xxx"></div>
+        </div>
+        <div class="form-row"><label>Email Address</label><input type="email" id="regEmail" placeholder="you@example.com"></div>
+        <div class="form-row"><label>Create Password</label><input type="password" id="regPassword" placeholder="At least 6 characters"></div>
+        <button class="btn btn-dark btn-block" onclick="doRegister()">Create Account</button>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="switchAuth('login');return false;">Log in here</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="modal-close" onclick="closeLightbox()">✕</button>
+  <img id="lightboxImg" src="" alt="">
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="js/main.js"></script>
+<script>
+  function applyHeroAndAboutImages(){
+    document.getElementById("heroSection").style.setProperty("--hero-img", `url('${IMG.hero}')`);
+    document.querySelectorAll("[data-img]").forEach(el=>{
+      el.src = IMG[el.dataset.img];
+    });
+  }
+  async function init(){
+    await initShared();
+    applyHeroAndAboutImages();
+    renderFilters();
+    renderPackageGrid("All");
+    renderFooterLinks();
+    renderActivities();
+    renderPartnerHotels();
+    renderGallery();
+  }
+  function onAfterLogin(){ /* nothing extra needed on the home page */ }
+  init();
+</script>
+</body>
+</html>

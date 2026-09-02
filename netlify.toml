@@ -1,0 +1,51 @@
+# Netlify configuration for Fantasy Zanzibar Safaris
+# - Serves the static site from the project root
+# - Runs the Node.js backend as Netlify Functions
+# - Routes /api/* requests to the matching function
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[functions]
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/register"
+  to = "/.netlify/functions/register"
+  status = 200
+
+[[redirects]]
+  from = "/api/login"
+  to = "/.netlify/functions/login"
+  status = 200
+
+[[redirects]]
+  from = "/api/me"
+  to = "/.netlify/functions/me"
+  status = 200
+
+[[redirects]]
+  from = "/api/bookings"
+  to = "/.netlify/functions/bookings"
+  status = 200
+
+[[redirects]]
+  from = "/api/activity-bookings"
+  to = "/.netlify/functions/activity-bookings"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin-login"
+  to = "/.netlify/functions/admin-login"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin-data"
+  to = "/.netlify/functions/admin-data"
+  status = 200
+
+[[redirects]]
+  from = "/api/admin-bookings"
+  to = "/.netlify/functions/admin-bookings"
+  status = 200

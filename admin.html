@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard | Fantasy Zanzibar Safaris</title>
+<link rel="icon" href="assets/img/logo-badge.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ ADMIN TOPBAR ============ -->
+<header class="site">
+  <div class="admin-topbar">
+    <a href="admin.html" class="nav-brand" style="text-decoration:none;">
+      <img src="assets/img/logo-badge.png" alt="Fantasy Zanzibar Safaris" style="width:38px;height:38px;">
+      <div class="word"><b>FANTASY</b><span>ADMIN DASHBOARD</span></div>
+    </a>
+    <div id="adminTopActions" style="display:none;">
+      <a href="index.html" class="btn btn-outline btn-sm" style="margin-right:8px;">View Site</a>
+      <button class="btn btn-outline btn-sm" onclick="doAdminLogout()">Log Out</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ ADMIN LOGIN GATE ============ -->
+<div class="admin-login-wrap" id="adminLoginWrap">
+  <div class="admin-login-box">
+    <div class="badge-ic">🔑</div>
+    <div class="eyebrow">RESTRICTED AREA</div>
+    <h2 style="margin-bottom:6px;">Admin Login</h2>
+    <p style="font-size:.88rem;">This dashboard is for Fantasy Zanzibar Safaris staff only.</p>
+    <div class="alert alert-err" id="adminAlert"></div>
+    <div class="form-row"><label>Admin Email</label><input type="email" id="adminEmail" placeholder="admin@fantasyzanzibarsafaris.co.tz"></div>
+    <div class="form-row"><label>Password</label><input type="password" id="adminPassword" placeholder="••••••••"></div>
+    <button class="btn btn-dark btn-block" onclick="doAdminLogin()">Log In to Dashboard</button>
+    <p class="form-note" style="text-align:center;margin-top:16px;">Login with the ADMIN_EMAIL / ADMIN_PASSWORD you set in your Netlify site's environment variables.</p>
+  </div>
+</div>
+
+<!-- ============ ADMIN DASHBOARD CONTENT ============ -->
+<section class="section-tight" id="adminContent" style="display:none;">
+  <div class="wrap profile-shell">
+
+    <!-- LEFT: admin nav -->
+    <div class="profile-card">
+      <div class="profile-avatar" style="background:var(--gold-500);color:var(--teal-950);">FZ</div>
+      <h3>Administrator</h3>
+      <div class="email">Fantasy Zanzibar Safaris</div>
+      <nav class="profile-nav">
+        <button class="active" data-panel="overview" onclick="switchAdminPanel('overview', this)">📊 Overview</button>
+        <button data-panel="bookings" onclick="switchAdminPanel('bookings', this)">🧳 Manage Bookings</button>
+        <button data-panel="customers" onclick="switchAdminPanel('customers', this)">👥 Customers</button>
+        <button data-panel="packages" onclick="switchAdminPanel('packages', this)">🏝️ Package Popularity</button>
+        <button class="logout-btn" onclick="doAdminLogout()">🚪 Log Out</button>
+      </nav>
+    </div>
+
+    <!-- RIGHT: panels -->
+    <div class="profile-main">
+
+      <!-- OVERVIEW -->
+      <div class="profile-panel active" id="admin-panel-overview">
+        <div class="panel-head">
+          <h2>Business Overview</h2>
+          <p>A live snapshot of bookings, revenue, and travelers across the whole platform.</p>
+        </div>
+        <div class="stat-card-grid" id="statCards"></div>
+        <h4 style="margin-bottom:16px;">Most Recent Bookings</h4>
+        <div id="recentBookings"></div>
+      </div>
+
+      <!-- MANAGE BOOKINGS -->
+      <div class="profile-panel" id="admin-panel-bookings">
+        <div class="panel-head">
+          <h2>Manage Bookings</h2>
+          <p>Update a booking's trip stage, or remove a booking entirely. Changes are visible to the customer immediately on their Track My Trip page.</p>
+        </div>
+        <div class="search-row">
+          <input type="text" id="bookingSearch" placeholder="Search by customer name, email, or package..." oninput="renderBookingsPanel()">
+          <select id="bookingStatusFilter" onchange="renderBookingsPanel()">
+            <option value="all">All Statuses</option>
+            <option value="0">Confirmed</option>
+            <option value="1">Paid</option>
+            <option value="2">Preparation</option>
+            <option value="3">On Holiday</option>
+            <option value="4">Completed</option>
+          </select>
+        </div>
+        <div id="allBookingsList"></div>
+      </div>
+
+      <!-- CUSTOMERS -->
+      <div class="profile-panel" id="admin-panel-customers">
+        <div class="panel-head">
+          <h2>Registered Customers</h2>
+          <p>Everyone who has created an account on Fantasy Zanzibar Safaris.</p>
+        </div>
+        <div class="search-row">
+          <input type="text" id="customerSearch" placeholder="Search by name or email..." oninput="renderCustomersPanel()">
+        </div>
+        <div id="customersList"></div>
+      </div>
+
+      <!-- PACKAGE POPULARITY -->
+      <div class="profile-panel" id="admin-panel-packages">
+        <div class="panel-head">
+          <h2>Package Popularity</h2>
+          <p>How each package is performing by number of bookings received.</p>
+        </div>
+        <div class="track-card" id="popularityList"></div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/main.js"></script>
+<script>
+  async function doAdminLogin(){
+    const email = document.getElementById("adminEmail").value;
+    const password = document.getElementById("adminPassword").value;
+    const ok = await adminLogin(email, password);
+    if(!ok){
+      const el = document.getElementById("adminAlert");
+      el.textContent = "Incorrect admin email or password.";
+      el.classList.add("show");
+      return;
+    }
+    showAdminDashboard();
+  }
+
+  async function doAdminLogout(){
+    await adminLogout();
+    document.getElementById("adminContent").style.display = "none";
+    document.getElementById("adminTopActions").style.display = "none";
+    document.getElementById("adminLoginWrap").style.display = "flex";
+    showToast("Logged out of admin dashboard.");
+  }
+
+  function showAdminDashboard(){
+    document.getElementById("adminLoginWrap").style.display = "none";
+    document.getElementById("adminContent").style.display = "block";
+    document.getElementById("adminTopActions").style.display = "block";
+    loadOverviewPanel();
+  }
+
+  async function loadOverviewPanel(){
+    const { bookings, users } = await adminFetchAll();
+    const stats = computeAdminStats(bookings, users);
+
+    document.getElementById("statCards").innerHTML = `
+      <div class="stat-card"><b>${stats.totalBookings}</b><span>TOTAL BOOKINGS</span></div>
+      <div class="stat-card"><b>${moneyFmt(stats.totalRevenue)}</b><span>TOTAL REVENUE</span></div>
+      <div class="stat-card"><b>${stats.totalTravelers}</b><span>TOTAL TRAVELERS</span></div>
+      <div class="stat-card"><b>${stats.totalUsers}</b><span>REGISTERED CUSTOMERS</span></div>
+    `;
+
+    const sorted = [...bookings].sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt)).slice(0,5);
+    const recentEl = document.getElementById("recentBookings");
+    if(sorted.length===0){
+      recentEl.innerHTML = `<div class="empty-state"><div class="ic-big">🧳</div><h3>No bookings yet</h3><p>Bookings made by customers will appear here.</p></div>`;
+    } else {
+      recentEl.innerHTML = sorted.map(adminBookingRowHtml).join("");
+    }
+  }
+
+  function adminBookingRowHtml(b){
+    const pkg = PACKAGES.find(p=>p.id===b.packageId);
+    return `
+      <div class="admin-row">
+        <img src="${pkg.image}" alt="${pkg.name}">
+        <div class="info">
+          <h4>${pkg.name}</h4>
+          <div class="meta">${b.email} • ${b.date} • ${b.travelers} traveler(s) • ${moneyFmt(b.total)}</div>
+        </div>
+        <div class="admin-actions">
+          <select onchange="changeBookingStage('${b.id}', this.value)">
+            ${TRACK_STEPS.map((s,i)=>`<option value="${i}" ${b.progressStep===i?'selected':''}>${s}</option>`).join("")}
+          </select>
+          <button class="btn btn-danger btn-sm" onclick="removeBooking('${b.id}')">Remove</button>
+        </div>
+      </div>`;
+  }
+
+  async function changeBookingStage(id, step){
+    try{
+      await setBookingProgress(id, step);
+      showToast("Booking stage updated.");
+      renderBookingsPanel();
+      loadOverviewPanel();
+    }catch(e){
+      showToast(e.message || "Could not update the booking.");
+    }
+  }
+
+  async function removeBooking(id){
+    if(!confirm("Remove this booking permanently? This cannot be undone.")) return;
+    try{
+      await deleteBooking(id);
+      showToast("Booking removed.");
+      renderBookingsPanel();
+      loadOverviewPanel();
+    }catch(e){
+      showToast(e.message || "Could not remove the booking.");
+    }
+  }
+
+  async function renderBookingsPanel(){
+    const { bookings } = await adminFetchAll();
+    const q = (document.getElementById("bookingSearch")?.value || "").toLowerCase();
+    const statusFilter = document.getElementById("bookingStatusFilter")?.value || "all";
+    let filtered = bookings.filter(b=>{
+      const pkg = PACKAGES.find(p=>p.id===b.packageId);
+      const matchesQ = !q || b.email.toLowerCase().includes(q) || pkg.name.toLowerCase().includes(q);
+      const matchesStatus = statusFilter==="all" || String(b.progressStep)===statusFilter;
+      return matchesQ && matchesStatus;
+    });
+    filtered.sort((a,b)=> new Date(b.createdAt) - new Date(a.createdAt));
+    const el = document.getElementById("allBookingsList");
+    if(filtered.length===0){
+      el.innerHTML = `<div class="empty-state"><div class="ic-big">🔍</div><h3>No bookings found</h3><p>Try a different search term or filter.</p></div>`;
+    } else {
+      el.innerHTML = filtered.map(adminBookingRowHtml).join("");
+    }
+  }
+
+  async function renderCustomersPanel(){
+    const { users, bookings } = await adminFetchAll();
+    const q = (document.getElementById("customerSearch")?.value || "").toLowerCase();
+    let filtered = users.filter(u => !q || u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q));
+    filtered.sort((a,b)=> new Date(b.joined||0) - new Date(a.joined||0));
+    const el = document.getElementById("customersList");
+    if(filtered.length===0){
+      el.innerHTML = `<div class="empty-state"><div class="ic-big">👥</div><h3>No customers found</h3><p>Registered customers will appear here.</p></div>`;
+      return;
+    }
+    el.innerHTML = filtered.map(u=>{
+      const tripCount = bookings.filter(b=>b.email===u.email).length;
+      const initials = u.name.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
+      const joined = u.joined ? new Date(u.joined).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}) : "—";
+      return `
+        <div class="customer-card">
+          <div class="av">${initials}</div>
+          <div class="info">
+            <h4>${u.name}</h4>
+            <div class="meta">${u.email} ${u.phone ? '• '+u.phone : ''} • Joined ${joined}</div>
+          </div>
+          <span class="status-pill upcoming">${tripCount} trip${tripCount===1?'':'s'}</span>
+        </div>`;
+    }).join("");
+  }
+
+  async function renderPackagesPanel(){
+    const { bookings } = await adminFetchAll();
+    const popularity = computePackagePopularity(bookings);
+    document.getElementById("popularityList").innerHTML = popularity.map(row=>`
+      <div class="pkg-pop-row">
+        <div class="pp-top"><span>${row.pkg.name}</span><b>${row.count} booking${row.count===1?'':'s'}</b></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:${row.pct}%;"></div></div>
+      </div>`).join("");
+  }
+
+  function switchAdminPanel(name, btn){
+    document.querySelectorAll(".profile-nav button[data-panel]").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    document.querySelectorAll(".profile-panel").forEach(p=>p.classList.remove("active"));
+    document.getElementById("admin-panel-"+name).classList.add("active");
+    if(name==="overview") loadOverviewPanel();
+    if(name==="bookings") renderBookingsPanel();
+    if(name==="customers") renderCustomersPanel();
+    if(name==="packages") renderPackagesPanel();
+  }
+
+  async function init(){
+    await loadAdminSession();
+    if(currentAdmin){
+      showAdminDashboard();
+    }
+  }
+  init();
+</script>
+</body>
+</html>

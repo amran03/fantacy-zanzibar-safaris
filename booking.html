@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book a Package | Fantasy Zanzibar Safaris</title>
+<link rel="icon" href="assets/img/logo-badge.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ HEADER / NAV ============ -->
+<header class="site">
+  <div class="nav">
+    <a href="index.html" class="nav-brand">
+      <img src="assets/img/logo-badge.png" alt="Fantasy Zanzibar Safaris">
+      <div class="word"><b>FANTASY</b><span>ZANZIBAR SAFARIS</span></div>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="index.html#about">About Zanzibar</a>
+      <a href="index.html#activities">Activities &amp; Sports</a>
+      <a href="index.html#hotels">Partner Hotels</a>
+      <a href="index.html#packages" class="current">Packages</a>
+      <a href="index.html#gallery">Gallery</a>
+      <a href="tracker.html">Track My Trip</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <div id="guestActions">
+        <button class="btn btn-login-nav" onclick="openAuth('login')">Log In</button>
+      </div>
+      <div id="userActions" style="display:none;">
+        <a href="profile.html" class="user-chip"><span class="dot"></span><span id="userChipName"></span></a>
+        <button class="btn btn-outline" onclick="logout()" style="margin-left:8px;">Log Out</button>
+      </div>
+      <button id="navToggle" onclick="toggleMobileNav()">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ PAGE BANNER ============ -->
+<section class="page-banner" id="pageBanner">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Home</a> / <a href="index.html#packages">Packages</a> / <span id="crumbName">Package</span></div>
+    <div class="eyebrow" id="bannerCategory">PACKAGE</div>
+    <h1 id="bannerTitle">Package Name</h1>
+    <p id="bannerMeta"></p>
+  </div>
+</section>
+
+<!-- ============ PACKAGE DETAIL + BOOKING ============ -->
+<section class="section" id="details">
+  <div class="wrap booking-layout">
+
+    <!-- LEFT: full package details -->
+    <div class="booking-main">
+      <div class="img-wrap pkg-hero-slider" id="pkgHeroSlider"></div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
+        <button class="tab-btn" data-tab="itinerary" onclick="switchTab('itinerary')">Day-by-Day Itinerary</button>
+        <button class="tab-btn" data-tab="includes" onclick="switchTab('includes')">What's Included</button>
+      </div>
+
+      <div class="tab-pane active" id="tab-overview">
+        <p id="pkgDesc" style="font-size:1.02rem;"></p>
+        <div class="track-card" style="margin-top:10px;">
+          <h4>Accommodation</h4>
+          <p id="pkgHotel" style="margin:0;"></p>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="tab-itinerary">
+        <div id="pkgItinerary"></div>
+      </div>
+
+      <div class="tab-pane" id="tab-includes">
+        <h4>What's Included</h4>
+        <ul class="includes-list" id="pkgIncludes"></ul>
+      </div>
+    </div>
+
+    <!-- RIGHT: sticky booking sidebar -->
+    <div class="booking-side" id="book">
+      <div class="step-indicator">
+        <div class="si active" id="si-1"></div>
+        <div class="si" id="si-2"></div>
+      </div>
+
+      <!-- STEP 1: trip details -->
+      <div id="bookStep1">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;">
+          <span style="font-size:.78rem;color:var(--teal-700);letter-spacing:.5px;">FROM</span>
+          <span id="sidePrice" style="font-family:'Playfair Display',serif;font-size:1.7rem;color:var(--teal-950);"></span>
+        </div>
+        <p class="form-note" style="margin-top:0;">Price is per person, based on the accommodation described above.</p>
+
+        <div class="form-row"><label>Trip Start Date</label><input type="date" id="bookDate"></div>
+        <div class="form-row"><label>Number of Travelers</label>
+          <select id="bookTravelers">
+            <option value="1">1 Traveler</option>
+            <option value="2" selected>2 Travelers</option>
+            <option value="3">3 Travelers</option>
+            <option value="4">4 Travelers</option>
+            <option value="5">5 Travelers</option>
+            <option value="6">6 Travelers</option>
+          </select>
+        </div>
+
+        <div class="track-card">
+          <div class="summary-line"><span id="sumPkgName">Package</span><span id="sumPkgPrice">$0</span></div>
+          <div class="summary-line"><span>Travelers</span><span id="sumTravelers">x2</span></div>
+          <div class="summary-total"><span>Total</span><span id="sumTotal">$0</span></div>
+        </div>
+        <button class="btn btn-gold btn-block" style="margin-top:18px;" onclick="goToStep2()">Continue to Payment</button>
+        <p class="form-note" style="text-align:center;">You'll need to be logged in to complete a booking.</p>
+      </div>
+
+      <!-- STEP 2: payment -->
+      <div id="bookStep2" style="display:none;">
+        <button class="btn btn-ghost btn-sm" style="margin-bottom:18px;" onclick="backToStep1()">&larr; Back</button>
+        <h4 style="margin-bottom:14px;">Secure Payment</h4>
+        <div class="pay-methods">
+          <div class="pay-method active" id="payCard" onclick="setPayMethod('card')">💳 Card</div>
+          <div class="pay-method" id="payMobile" onclick="setPayMethod('mobile')">📱 Mobile Money</div>
+        </div>
+        <div id="cardFields">
+          <div class="form-row"><label>Name on Card</label><input type="text" id="cardName" placeholder="Your Name"></div>
+          <div class="form-row"><label>Card Number</label><input type="text" id="cardNumber" placeholder="4242 4242 4242 4242" maxlength="19"></div>
+          <div class="form-grid-2">
+            <div class="form-row"><label>Expiry</label><input type="text" id="cardExpiry" placeholder="MM/YY" maxlength="5"></div>
+            <div class="form-row"><label>CVV</label><input type="text" id="cardCvv" placeholder="123" maxlength="4"></div>
+          </div>
+        </div>
+        <div id="mobileFields" style="display:none;">
+          <div class="form-row"><label>Mobile Number (M-Pesa / Tigo Pesa / Airtel Money)</label><input type="text" id="mobileNumber" placeholder="07xx xxx xxx"></div>
+          <p class="form-note">You'll receive a confirmation prompt on your phone.</p>
+        </div>
+        <div class="track-card" style="margin:16px 0;">
+          <div class="summary-total" style="padding-top:0;"><span>Amount Due</span><span id="payTotal">$0</span></div>
+        </div>
+        <button class="btn btn-gold btn-block" onclick="processPayment()" id="payBtn">Pay Now &amp; Confirm Booking</button>
+        <p class="form-note" style="text-align:center;margin-top:14px;">This is a demo payment system — no real charges are made or card details stored.</p>
+      </div>
+
+      <!-- STEP 3: success -->
+      <div id="bookSuccess" style="display:none;">
+        <div class="success-box">
+          <div class="check">✓</div>
+          <h3>Trip Confirmed!</h3>
+          <p>Thank you! Your payment has been received and your package is confirmed. Track your full itinerary any time from your profile.</p>
+          <a href="profile.html" class="btn btn-dark btn-block">Go to My Profile &amp; Tracking</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RELATED PACKAGES ============ -->
+<section class="section-tight" style="background:var(--cream-200);">
+  <div class="wrap">
+    <div class="section-head">
+      <div>
+        <div class="eyebrow">YOU MIGHT ALSO LIKE</div>
+        <h2>Other trips worth exploring</h2>
+      </div>
+    </div>
+    <div class="pkg-grid" id="relatedGrid"></div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <img class="f-logo" src="assets/img/logo-horizontal.png" alt="Fantasy Zanzibar Safaris">
+        <p>A tourism company rooted in Zanzibar, connecting you with the beaches, history and culture of this remarkable island.</p>
+      </div>
+      <div>
+        <h5>NAVIGATION</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#about">About Zanzibar</a></li>
+          <li><a href="index.html#packages">Packages</a></li>
+          <li><a href="index.html#gallery">Gallery</a></li>
+          <li><a href="tracker.html">Track My Trip</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>PACKAGES</h5>
+        <ul id="footerPkgLinks"></ul>
+      </div>
+      <div>
+        <h5>CONTACT US</h5>
+        <ul>
+          <li>Stone Town, Zanzibar, Tanzania</li>
+          <li>+255 777 000 000</li>
+          <li>hello@fantasyzanzibarsafaris.co.tz</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Fantasy Zanzibar Safaris. All rights reserved.</span>
+      <span>Discover • Experience • Treasure</span>
+      <a href="admin.html" style="color:var(--cream-200);opacity:.55;">Admin</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ AUTH MODAL (shared) ============ -->
+<div class="overlay" id="authOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOverlay('authOverlay')">✕</button>
+    <div class="modal-body">
+      <div class="eyebrow">YOUR ACCOUNT</div>
+      <h2 id="authTitle">Welcome back</h2>
+      <div class="alert alert-err" id="authAlert"></div>
+
+      <div id="loginForm">
+        <div class="form-row"><label>Email Address</label><input type="email" id="loginEmail" placeholder="you@example.com"></div>
+        <div class="form-row"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+        <button class="btn btn-dark btn-block" onclick="doLogin()">Log In to Your Account</button>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="switchAuth('register');return false;">Sign up now</a></p>
+      </div>
+
+      <div id="registerForm" style="display:none;">
+        <div class="form-grid-2">
+          <div class="form-row"><label>Full Name</label><input type="text" id="regName" placeholder="Your name"></div>
+          <div class="form-row"><label>Phone Number</label><input type="text" id="regPhone" placeholder="+255 7xx xxx xxx"></div>
+        </div>
+        <div class="form-row"><label>Email Address</label><input type="email" id="regEmail" placeholder="you@example.com"></div>
+        <div class="form-row"><label>Create Password</label><input type="password" id="regPassword" placeholder="At least 6 characters"></div>
+        <button class="btn btn-dark btn-block" onclick="doRegister()">Create Account</button>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="switchAuth('login');return false;">Log in here</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/main.js"></script>
+<script>
+  let currentPkg = null;
+  let payMethod = "card";
+
+  function switchTab(tab){
+    document.querySelectorAll(".tab-btn").forEach(b=>b.classList.toggle("active", b.dataset.tab===tab));
+    document.querySelectorAll(".tab-pane").forEach(p=>p.classList.toggle("active", p.id==="tab-"+tab));
+  }
+
+  function getPkgIdFromUrl(){
+    const params = new URLSearchParams(window.location.search);
+    return params.get("pkg") || PACKAGES[0].id;
+  }
+
+  function renderPackageDetail(){
+    const id = getPkgIdFromUrl();
+    currentPkg = PACKAGES.find(p=>p.id===id) || PACKAGES[0];
+    const p = currentPkg;
+
+    document.title = p.name + " | Fantasy Zanzibar Safaris";
+    document.getElementById("pageBanner").style.setProperty("--banner-img", `url('${p.image}')`);
+    document.getElementById("crumbName").textContent = p.name;
+    document.getElementById("bannerCategory").textContent = p.category.toUpperCase() + " PACKAGE";
+    document.getElementById("bannerTitle").textContent = p.name;
+    document.getElementById("bannerMeta").textContent = `${p.days} Days / ${p.nights} Nights • Starting from ${moneyFmt(p.price)} per person`;
+
+    document.getElementById("pkgHeroSlider").innerHTML = sliderHtml(p.images, p.name);
+    document.getElementById("pkgDesc").textContent = p.desc;
+    document.getElementById("pkgHotel").textContent = p.hotel;
+    document.getElementById("pkgIncludes").innerHTML = p.includes.map(i=>`<li>${i}</li>`).join("");
+    document.getElementById("pkgItinerary").innerHTML = p.itinerary.map((d,i)=>`
+      <div class="itin-full-item">
+        <div class="num">${String(i+1).padStart(2,'0')}</div>
+        <div><h5>Day ${i+1}: ${d.title}</h5><p>${d.desc}</p></div>
+      </div>`).join("");
+
+    document.getElementById("sidePrice").textContent = moneyFmt(p.price);
+    document.getElementById("sumPkgName").textContent = p.name;
+    document.getElementById("sumPkgPrice").textContent = moneyFmt(p.price) + " x person";
+
+    const dateInput = document.getElementById("bookDate");
+    const min = new Date(); min.setDate(min.getDate()+7);
+    dateInput.min = min.toISOString().split("T")[0];
+    dateInput.value = min.toISOString().split("T")[0];
+
+    updateBookingSummary();
+    renderRelated();
+  }
+
+  function updateBookingSummary(){
+    const travelers = parseInt(document.getElementById("bookTravelers").value);
+    const total = travelers * currentPkg.price;
+    document.getElementById("sumTravelers").textContent = "x" + travelers;
+    document.getElementById("sumTotal").textContent = moneyFmt(total);
+  }
+
+  function goToStep2(){
+    if(!currentUser){
+      pendingRedirectAfterLogin = {type:"book"};
+      openAuth("login");
+      showToast("Please log in first to complete your booking.");
+      return;
+    }
+    const date = document.getElementById("bookDate").value;
+    if(!date){ showToast("Please choose a trip start date."); return; }
+    document.getElementById("si-2").classList.add("active");
+    document.getElementById("bookStep1").style.display = "none";
+    document.getElementById("bookStep2").style.display = "block";
+    document.getElementById("payTotal").textContent = document.getElementById("sumTotal").textContent;
+  }
+
+  function backToStep1(){
+    document.getElementById("si-2").classList.remove("active");
+    document.getElementById("bookStep2").style.display = "none";
+    document.getElementById("bookStep1").style.display = "block";
+  }
+
+  function setPayMethod(method){
+    payMethod = method;
+    document.getElementById("payCard").classList.toggle("active", method==="card");
+    document.getElementById("payMobile").classList.toggle("active", method==="mobile");
+    document.getElementById("cardFields").style.display = method==="card" ? "block":"none";
+    document.getElementById("mobileFields").style.display = method==="mobile" ? "block":"none";
+  }
+
+  async function processPayment(){
+    if(payMethod==="card"){
+      if(!document.getElementById("cardNumber").value || !document.getElementById("cardName").value){
+        showToast("Please fill in all card details."); return;
+      }
+    } else {
+      if(!document.getElementById("mobileNumber").value){ showToast("Please enter your mobile number."); return; }
+    }
+    const btn = document.getElementById("payBtn");
+    btn.disabled = true; btn.textContent = "Processing Payment...";
+    await new Promise(r=>setTimeout(r, 1400));
+
+    const travelers = parseInt(document.getElementById("bookTravelers").value);
+    const date = document.getElementById("bookDate").value;
+    const total = travelers * currentPkg.price;
+
+    try{
+      await createBooking({
+        packageId: currentPkg.id,
+        packageName: currentPkg.name,
+        date, travelers, total
+      });
+      document.getElementById("bookStep2").style.display = "none";
+      document.getElementById("bookSuccess").style.display = "block";
+      showToast("Trip confirmed! 🎉");
+    }catch(e){
+      showToast(e.message || "Payment could not be completed. Please try again.");
+    }finally{
+      btn.disabled = false; btn.textContent = "Pay Now & Confirm Booking";
+    }
+  }
+
+  function renderRelated(){
+    const others = PACKAGES.filter(p=>p.id!==currentPkg.id).slice(0,3);
+    document.getElementById("relatedGrid").innerHTML = others.map(packageCardHtml).join("");
+  }
+
+  function onAfterLogin(){
+    if(pendingRedirectAfterLogin && pendingRedirectAfterLogin.type==="book"){
+      pendingRedirectAfterLogin = null;
+      goToStep2();
+    }
+  }
+
+  document.getElementById("bookTravelers").addEventListener("change", updateBookingSummary);
+
+  async function init(){
+    await initShared();
+    renderPackageDetail();
+    renderFooterLinks();
+  }
+  init();
+</script>
+</body>
+</html>

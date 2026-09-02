@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Track My Trip | Fantasy Zanzibar Safaris</title>
+<link rel="icon" href="assets/img/logo-badge.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500&family=Jost:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- ============ HEADER / NAV ============ -->
+<header class="site">
+  <div class="nav">
+    <a href="index.html" class="nav-brand">
+      <img src="assets/img/logo-badge.png" alt="Fantasy Zanzibar Safaris">
+      <div class="word"><b>FANTASY</b><span>ZANZIBAR SAFARIS</span></div>
+    </a>
+    <nav class="nav-links" id="navLinks">
+      <a href="index.html">Home</a>
+      <a href="index.html#about">About Zanzibar</a>
+      <a href="index.html#activities">Activities &amp; Sports</a>
+      <a href="index.html#hotels">Partner Hotels</a>
+      <a href="index.html#packages">Packages</a>
+      <a href="index.html#gallery">Gallery</a>
+      <a href="tracker.html" class="current">Track My Trip</a>
+      <a href="index.html#contact">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <div id="guestActions">
+        <button class="btn btn-login-nav" onclick="openAuth('login')">Log In</button>
+      </div>
+      <div id="userActions" style="display:none;">
+        <a href="profile.html" class="user-chip"><span class="dot"></span><span id="userChipName"></span></a>
+        <button class="btn btn-outline" onclick="logout()" style="margin-left:8px;">Log Out</button>
+      </div>
+      <button id="navToggle" onclick="toggleMobileNav()">☰</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ PAGE BANNER ============ -->
+<section class="page-banner" style="--banner-img:url('https://commons.wikimedia.org/wiki/Special:FilePath/Amazing%20Zanzibar%20Sunset%20(15).jpg?width=1600');">
+  <div class="wrap">
+    <div class="breadcrumb"><a href="index.html">Home</a> / <span>Track My Trip</span></div>
+    <div class="eyebrow">TRIP TRACKING</div>
+    <h1>Follow your Zanzibar journey, step by step</h1>
+    <p>See exactly where your booking stands — from confirmation to the day you're back home — plus the full day-by-day plan for your trip.</p>
+  </div>
+</section>
+
+<!-- ============ ACCESS GATE (shown only when logged out) ============ -->
+<section class="section" id="loginGate" style="display:none;">
+  <div class="wrap" style="max-width:640px;">
+    <div class="empty-state">
+      <div class="ic-big">🔒</div>
+      <h3>Please log in to track your trip</h3>
+      <p>Trip tracking is only available to logged-in travelers, since it shows your personal booking and itinerary details.</p>
+      <button class="btn btn-dark" onclick="openAuth('login')">Log In / Sign Up</button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TRACKING CONTENT (shown only when logged in) ============ -->
+<section class="section" id="trackerContent" style="display:none;">
+  <div class="wrap">
+    <div class="track-shell">
+      <div class="track-select" id="trackSelect"></div>
+      <div id="trackContent"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site">
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <img class="f-logo" src="assets/img/logo-horizontal.png" alt="Fantasy Zanzibar Safaris">
+        <p>A tourism company rooted in Zanzibar, connecting you with the beaches, history and culture of this remarkable island.</p>
+      </div>
+      <div>
+        <h5>NAVIGATION</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="index.html#about">About Zanzibar</a></li>
+          <li><a href="index.html#packages">Packages</a></li>
+          <li><a href="index.html#gallery">Gallery</a></li>
+          <li><a href="tracker.html">Track My Trip</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>PACKAGES</h5>
+        <ul id="footerPkgLinks"></ul>
+      </div>
+      <div>
+        <h5>CONTACT US</h5>
+        <ul>
+          <li>Stone Town, Zanzibar, Tanzania</li>
+          <li>+255 777 000 000</li>
+          <li>hello@fantasyzanzibarsafaris.co.tz</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 Fantasy Zanzibar Safaris. All rights reserved.</span>
+      <span>Discover • Experience • Treasure</span>
+      <a href="admin.html" style="color:var(--cream-200);opacity:.55;">Admin</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ AUTH MODAL (shared) ============ -->
+<div class="overlay" id="authOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOverlay('authOverlay')">✕</button>
+    <div class="modal-body">
+      <div class="eyebrow">YOUR ACCOUNT</div>
+      <h2 id="authTitle">Welcome back</h2>
+      <div class="alert alert-err" id="authAlert"></div>
+
+      <div id="loginForm">
+        <div class="form-row"><label>Email Address</label><input type="email" id="loginEmail" placeholder="you@example.com"></div>
+        <div class="form-row"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+        <button class="btn btn-dark btn-block" onclick="doLogin()">Log In to Your Account</button>
+        <p class="auth-switch">Don't have an account? <a href="#" onclick="switchAuth('register');return false;">Sign up now</a></p>
+      </div>
+
+      <div id="registerForm" style="display:none;">
+        <div class="form-grid-2">
+          <div class="form-row"><label>Full Name</label><input type="text" id="regName" placeholder="Your name"></div>
+          <div class="form-row"><label>Phone Number</label><input type="text" id="regPhone" placeholder="+255 7xx xxx xxx"></div>
+        </div>
+        <div class="form-row"><label>Email Address</label><input type="email" id="regEmail" placeholder="you@example.com"></div>
+        <div class="form-row"><label>Create Password</label><input type="password" id="regPassword" placeholder="At least 6 characters"></div>
+        <button class="btn btn-dark btn-block" onclick="doRegister()">Create Account</button>
+        <p class="auth-switch">Already have an account? <a href="#" onclick="switchAuth('login');return false;">Log in here</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/main.js"></script>
+<script>
+  function refreshTrackerView(){
+    const gate = document.getElementById("loginGate");
+    const content = document.getElementById("trackerContent");
+    if(currentUser){
+      gate.style.display = "none";
+      content.style.display = "block";
+      const params = new URLSearchParams(window.location.search);
+      renderTracking("trackSelect", "trackContent", params.get("booking"));
+    } else {
+      gate.style.display = "block";
+      content.style.display = "none";
+    }
+  }
+  function onAfterLogin(){ refreshTrackerView(); }
+  function onAfterLogout(){ refreshTrackerView(); }
+
+  async function init(){
+    await initShared();
+    renderFooterLinks();
+    refreshTrackerView();
+  }
+  init();
+</script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "fantasy-zanzibar-safaris",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Fantasy Zanzibar Safaris — static site + Netlify Functions backend (auth, bookings, admin).",
+  "dependencies": {
+    "@netlify/blobs": "^7.3.0",
+    "bcryptjs": "^2.4.3",
+    "jsonwebtoken": "^9.0.2"
+  }
+}
