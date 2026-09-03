@@ -101,7 +101,7 @@
 
         <div class="form-row"><label>Trip Start Date</label><input type="date" id="bookDate"></div>
         <div class="form-row"><label>Number of Travelers</label>
-          <select id="bookTravelers">
+          <select id="bookTravelers" onchange="handleTravelersChange()">
             <option value="1">1 Traveler</option>
             <option value="2" selected>2 Travelers</option>
             <option value="3">3 Travelers</option>
@@ -110,6 +110,13 @@
             <option value="6">6 Travelers</option>
           </select>
         </div>
+        <div class="form-row"><label>Your Nationality</label><input type="text" id="bookNationality" placeholder="e.g. Tanzania, USA, UK"></div>
+
+        <div id="companionsSection" style="margin-top:15px; padding-top:15px; border-top:1px solid #eee; display:none;">
+          <p style="font-size:0.8rem; font-weight:600; color:var(--teal-700); margin-bottom:10px;">Traveler Details</p>
+          <div id="companionsList"></div>
+        </div>
+
 
         <div class="track-card">
           <div class="summary-line"><span id="sumPkgName">Package</span><span id="sumPkgPrice">$0</span></div>
@@ -299,7 +306,28 @@
     const total = travelers * currentPkg.price;
     document.getElementById("sumTravelers").textContent = "x" + travelers;
     document.getElementById("sumTotal").textContent = moneyFmt(total);
+    handleTravelersChange();
   }
+
+  function handleTravelersChange(){
+    const count = parseInt(document.getElementById("bookTravelers").value);
+    const section = document.getElementById("companionsSection");
+    const list = document.getElementById("companionsList");
+    if(count > 1){
+      section.style.display = "block";
+      list.innerHTML = "";
+      for(let i=2; i<=count; i++){
+        list.innerHTML += `
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+            <div class="form-row" style="margin-bottom:0;"><label>Traveler ${i} Name</label><input type="text" class="comp-name" placeholder="Full Name"></div>
+            <div class="form-row" style="margin-bottom:0;"><label>Nationality</label><input type="text" class="comp-nat" placeholder="Nationality"></div>
+          </div>`;
+      }
+    } else {
+      section.style.display = "none";
+    }
+  }
+
 
   function goToStep2(){
     if(!currentUser){
@@ -347,15 +375,24 @@
     const total = travelers * currentPkg.price;
 
     try{
+      const companions = [];
+      document.querySelectorAll('.comp-name').forEach((el, idx) => {
+        const natInput = document.querySelectorAll('.comp-nat')[idx];
+        if(el.value) companions.push({ name: el.value, nationality: natInput ? natInput.value : '' });
+      });
+
       await createBooking({
         packageId: currentPkg.id,
         packageName: currentPkg.name,
-        date, travelers, total
+        date, travelers, total,
+        nationality: document.getElementById("bookNationality").value,
+        companions: companions
       });
       document.getElementById("bookStep2").style.display = "none";
       document.getElementById("bookSuccess").style.display = "block";
       showToast("Trip confirmed! 🎉");
     }catch(e){
+
       showToast(e.message || "Payment could not be completed. Please try again.");
     }finally{
       btn.disabled = false; btn.textContent = "Pay Now & Confirm Booking";

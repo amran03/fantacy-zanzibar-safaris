@@ -71,7 +71,49 @@
       <div class="track-select" id="trackSelect"></div>
       <div id="trackContent"></div>
     </div>
+
+    <!-- PROFILE & ARRIVAL DETAILS SECTION -->
+    <div class="section" id="userProfileSection" style="margin-top:40px; border-top:1px solid rgba(0,0,0,0.1); padding-top:40px;">
+      <div class="wrap">
+        <h2 style="font-family:'Playfair Display',serif; margin-bottom:20px;">My Travel Profile</h2>
+        <div class="profile-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:30px;">
+
+          <!-- Arrival Details -->
+          <div class="profile-card" style="background:white; padding:25px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05);">
+            <h4 style="margin-bottom:15px;"><i class="fa-solid fa-plane-arrival"></i> Transport & Arrival Details</h4>
+            <div class="form-row"><label>Airline / Flight Company</label><input type="text" id="profAirline" placeholder="e.g. Precision Air"></div>
+            <div class="form-row"><label>Arrival Time & Date</label><input type="datetime-local" id="profArrival"></div>
+            <div class="form-row"><label>Origin (Unapotoka)</label><input type="text" id="profOrigin" placeholder="e.g. Nairobi"></div>
+            <div class="form-row"><label>Emergency Contact</label><input type="tel" id="profEmergency" placeholder="+255 ..."></div>
+            <button class="btn btn-dark btn-block" style="margin-top:15px;" onclick="saveProfile()">Update Arrival Info</button>
+          </div>
+
+          <!-- Companion Management -->
+          <div class="profile-card" style="background:white; padding:25px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05);">
+            <h4 style="margin-bottom:15px;"><i class="fa-solid fa-users"></i> Traveling Companions</h4>
+            <div id="companionsList" style="margin-bottom:15px; max-height:200px; overflow-y:auto;"></div>
+            <div style="display:flex; gap:10px;">
+              <button class="btn btn-outline btn-sm" onclick="addCompanion()">+ Add Person</button>
+              <button class="btn btn-dark btn-sm" onclick="saveCompanions()">Save List</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- CUSTOMER SERVICE CHAT -->
+        <div class="chat-section" style="margin-top:30px; background:white; padding:25px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05); border:2px solid var(--gold-accent);">
+          <h4 style="margin-bottom:15px;"><i class="fa-solid fa-headset"></i> Customer Service Chat</h4>
+          <div id="chatMessages" style="height:300px; overflow-y:auto; background:#f9f9f9; padding:15px; border-radius:8px; margin-bottom:15px; display:flex; flex-direction:column; gap:10px;"></div>
+          <div style="display:flex; gap:10px;">
+            <input type="text" id="chatInput" placeholder="Ask admin anything..." style="flex:1; padding:12px; border:1px solid #ddd; border-radius:25px; outline:none;">
+            <button class="btn btn-gold" style="border-radius:50%; width:45px; height:45px; display:flex; align-items:center; justify-content:center;" onclick="sendMessage()">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
+
 </section>
 
 <!-- ============ FOOTER ============ -->
@@ -167,8 +209,11 @@
     await initShared();
     renderFooterLinks();
     refreshTrackerView();
+    loadMessages();
+    loadCompanions();
   }
   init();
+
 </script>
 </body>
 </html>

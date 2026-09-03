@@ -712,3 +712,121 @@ async function initShared(){
   await loadSession();
   updateAuthUI();
 }
+
+/* --- Profile & Companion Logic --- */
+async function saveProfile() {
+  const profile = {
+    airline: document.getElementById("profAirline").value,
+    arrival: document.getElementById("profArrival").value,
+    origin: document.getElementById("profOrigin").value,
+    emergency: document.getElementById("profEmergency").value,
+  };
+
+  // Use localStorage for profile as a fallback/demo since API endpoint isn't defined
+  localStorage.setItem(`fzs_profile_${currentUser?.email}`, JSON.stringify(profile));
+  showToast("Arrival info updated successfully!");
+}
+
+function loadCompanions() {
+  const container = document.getElementById("companionsList");
+  if (!container) return;
+
+  const email = currentUser?.email;
+  const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+  const userBooking = bookings.find(b => b.email === email);
+  const companions = userBooking?.companions || [];
+
+  container.innerHTML = "";
+  if (companions.length === 0) {
+    container.innerHTML = '<p style="font-size:0.8rem; color:#888;">No companions added yet.</p>';
+    return;
+  }
+
+  companions.forEach((c, i) => {
+    container.innerHTML += `
+      <div style="display:flex; gap:10px; margin-bottom:8px; align-items:center;">
+        <input type="text" class="comp-name" value="${c.name}" style="flex:1; padding:5px; font-size:0.8rem;">
+        <input type="text" class="comp-nat" value="${c.nationality}" style="flex:1; padding:5px; font-size:0.8rem;">
+        <button onclick="this.parentElement.remove()" style="background:none; border:none; color:red; cursor:pointer;">✕</button>
+      </div>`;
+  });
+}
+
+function addCompanion() {
+  const container = document.getElementById("companionsList");
+  if (!container) return;
+  const div = document.createElement("div");
+  div.style.cssText = "display:flex; gap:10px; margin-bottom:8px; align-items:center;";
+  div.innerHTML = `
+    <input type="text" class="comp-name" placeholder="Name" style="flex:1; padding:5px; font-size:0.8rem;">
+    <input type="text" class="comp-nat" placeholder="Nationality" style="flex:1; padding:5px; font-size:0.8rem;">
+    <button onclick="this.parentElement.remove()" style="background:none; border:none; color:red; cursor:pointer;">✕</button>
+  `;
+  container.appendChild(div);
+}
+
+async function saveCompanions() {
+  const companions = [];
+  document.querySelectorAll(".comp-name").forEach((el, i) => {
+    const nat = document.querySelectorAll(".comp-nat")[i];
+    if (el.value) companions.push({ name: el.value, nationality: nat ? nat.value : "" });
+  });
+
+  // Update in localStorage bookings for demo
+  const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+  const idx = bookings.findIndex(b => b.email === currentUser?.email);
+  if (idx !== -1) {
+    bookings[idx].companions = companions;
+    localStorage.setItem('bookings', JSON.stringify(bookings));
+    showToast("Companion list saved!");
+  } else {
+    showToast("No active booking found to attach companions to.");
+  }
+}
+
+/* --- Customer Service Chat Logic --- */
+async function sendMessage() {
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+  if (!text || !currentUser) return;
+
+  const msg = {
+    sender: 'user',
+    email: currentUser.email,
+    text: text,
+    timestamp: new Date().toISOString()
+  };
+
+  const chats = JSON.parse(localStorage.getItem('chats') || '[]');
+  chats.push(msg);
+  localStorage.setItem('chats', JSON.stringify(chats));
+
+  input.value = "";
+  loadMessages();
+}
+
+function loadMessages() {
+  const container = document.getElementById("chatMessages");
+  if (!container || !currentUser) return;
+
+  const chats = JSON.parse(localStorage.getItem('chats') || '[]');
+  const myChats = chats.filter(c => c.email === currentUser.email || c.sender === 'admin');
+
+  container.innerHTML = "";
+  myChats.forEach(m => {
+    const div = document.createElement("div");
+    div.style.cssText = `
+      align-self: ${m.sender === 'user' ? 'flex-end' : 'flex-start'};
+      background: ${m.sender === 'user' ? 'var(--gold-accent)' : '#eee'};
+      color: ${m.sender === 'user' ? 'white' : '#333'};
+      padding: 8px 12px;
+      border-radius: 12px;
+      max-width: 80%;
+      font-size: 0.9rem;
+    `;
+    div.textContent = m.text;
+    container.appendChild(div);
+  });
+  container.scrollTop = container.scrollHeight;
+}
+
