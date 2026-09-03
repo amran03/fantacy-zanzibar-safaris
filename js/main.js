@@ -711,7 +711,50 @@ function computePackagePopularity(bookings){
 async function initShared(){
   await loadSession();
   updateAuthUI();
+  // New: Check for flight info reminder on every shared page load
+  if(currentUser) checkFlightReminder();
 }
+
+function openChatModal() {
+  const modal = document.getElementById("chatModal");
+  if(modal) {
+    modal.style.display = "flex";
+    loadMessages();
+  }
+}
+
+function closeChatModal() {
+  const modal = document.getElementById("chatModal");
+  if(modal) modal.style.display = "none";
+}
+
+function checkFlightReminder() {
+  const reminder = document.getElementById("flightReminder");
+  if(!reminder) return;
+
+  const email = currentUser?.email;
+  const bookings = JSON.parse(localStorage.getItem('bookings') || '[]');
+  const userBooking = bookings.find(b => b.email === email);
+  const profile = JSON.parse(localStorage.getItem(`fzs_profile_${email}`) || '{}');
+
+  if(!userBooking) return;
+
+  // If flight info is missing
+  if(!profile.airline || !profile.arrival) {
+    const arrivalDate = new Date(userBooking.date);
+    const today = new Date();
+    const diffTime = arrivalDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    // Show reminder if arrival is within 7 days (or any time if it's just a general prompt)
+    if(diffDays <= 7) {
+      reminder.style.display = "block";
+    }
+  } else {
+    reminder.style.display = "none";
+  }
+}
+
 
 /* --- Profile & Companion Logic --- */
 async function saveProfile() {

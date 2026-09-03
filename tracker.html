@@ -72,15 +72,26 @@
       <div id="trackContent"></div>
     </div>
 
-    <!-- PROFILE & ARRIVAL DETAILS SECTION -->
+    <!-- USER PROFILE & TRIP SETTINGS SECTION -->
     <div class="section" id="userProfileSection" style="margin-top:40px; border-top:1px solid rgba(0,0,0,0.1); padding-top:40px;">
       <div class="wrap">
-        <h2 style="font-family:'Playfair Display',serif; margin-bottom:20px;">My Travel Profile</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 style="font-family:'Playfair Display',serif; margin:0;">My Travel Profile</h2>
+            <button class="btn btn-gold" onclick="openChatModal()" style="border-radius:25px; padding:10px 20px; font-weight:600; cursor:pointer; border:none;">
+                <i class="fa-solid fa-headset"></i> Customer Service
+            </button>
+        </div>
+
+        <!-- Flight Info Reminder Alert -->
+        <div id="flightReminder" class="alert alert-warn" style="display:none; background:#fff3cd; color:#856404; padding:15px; border-radius:8px; margin-bottom:20px; border-left:5px solid #ffeeba; font-size:0.9rem;">
+            <i class="fa-solid fa-circle-exclamation"></i> <strong>Reminder:</strong> Please provide your flight and arrival details at least one week before your arrival to ensure a smooth pickup.
+        </div>
+
         <div class="profile-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:30px;">
 
-          <!-- Arrival Details -->
+          <!-- Arrival Details (Optional) -->
           <div class="profile-card" style="background:white; padding:25px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05);">
-            <h4 style="margin-bottom:15px;"><i class="fa-solid fa-plane-arrival"></i> Transport & Arrival Details</h4>
+            <h4 style="margin-bottom:15px;"><i class="fa-solid fa-plane-arrival"></i> Transport & Arrival Details (Optional)</h4>
             <div class="form-row"><label>Airline / Flight Company</label><input type="text" id="profAirline" placeholder="e.g. Precision Air"></div>
             <div class="form-row"><label>Arrival Time & Date</label><input type="datetime-local" id="profArrival"></div>
             <div class="form-row"><label>Origin (Unapotoka)</label><input type="text" id="profOrigin" placeholder="e.g. Nairobi"></div>
@@ -96,18 +107,6 @@
               <button class="btn btn-outline btn-sm" onclick="addCompanion()">+ Add Person</button>
               <button class="btn btn-dark btn-sm" onclick="saveCompanions()">Save List</button>
             </div>
-          </div>
-        </div>
-
-        <!-- CUSTOMER SERVICE CHAT -->
-        <div class="chat-section" style="margin-top:30px; background:white; padding:25px; border-radius:12px; box-shadow:0 4px 15px rgba(0,0,0,0.05); border:2px solid var(--gold-accent);">
-          <h4 style="margin-bottom:15px;"><i class="fa-solid fa-headset"></i> Customer Service Chat</h4>
-          <div id="chatMessages" style="height:300px; overflow-y:auto; background:#f9f9f9; padding:15px; border-radius:8px; margin-bottom:15px; display:flex; flex-direction:column; gap:10px;"></div>
-          <div style="display:flex; gap:10px;">
-            <input type="text" id="chatInput" placeholder="Ask admin anything..." style="flex:1; padding:12px; border:1px solid #ddd; border-radius:25px; outline:none;">
-            <button class="btn btn-gold" style="border-radius:50%; width:45px; height:45px; display:flex; align-items:center; justify-content:center;" onclick="sendMessage()">
-              <i class="fa-solid fa-paper-plane"></i>
-            </button>
           </div>
         </div>
       </div>
@@ -185,7 +184,26 @@
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+    <!-- CHAT MODAL (Popup) -->
+    <div class="overlay" id="chatModal" style="display:none; position:fixed; z-index:3000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.6); align-items:center; justify-content:center;">
+        <div class="modal-content" style="width:400px; max-width:90%; border-radius:15px; overflow:hidden; display:flex; flex-direction:column; max-height:80vh;">
+            <div style="background:var(--teal-dark); color:white; padding:15px; display:flex; justify-content:space-between; align-items:center;">
+                <h4 style="margin:0; font-family:'Cinzel';"><i class="fa-solid fa-headset"></i> Customer Service</h4>
+                <span style="cursor:pointer; font-size:1.5rem;" onclick="closeChatModal()">&times;</span>
+            </div>
+            <div id="chatMessages" style="flex:1; overflow-y:auto; padding:15px; background:#fdfdfd; display:flex; flex-direction:column; gap:10px; min-height:300px; max-height:500px;">
+                <!-- Messages load here -->
+            </div>
+            <div style="padding:15px; border-top:1px solid #eee; display:flex; gap:10px; background:white;">
+                <input type="text" id="chatInput" placeholder="Type your message..." style="flex:1; padding:10px; border:1px solid #ddd; border-radius:20px; outline:none;">
+                <button onclick="sendMessage()" class="btn-gold-search" style="width:40px; height:40px; border-radius:50%; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
 
 <script src="js/main.js"></script>
 <script>

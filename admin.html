@@ -415,13 +415,24 @@
   async function renderCustomersPanel(){
     const { users, bookings } = await adminFetchAll();
     const q = (document.getElementById("customerSearch")?.value || "").toLowerCase();
-    let filtered = users.filter(u => {
+
+    let filtered = users.map(u => {
+      // DEMO ONLY: Merge localStorage profile data so admin can see it during local testing
+      const localProfile = JSON.parse(localStorage.getItem(`fzs_profile_${u.email}`) || '{}');
+      return {
+        ...u,
+        flightDetails: { ...u.flightDetails, ...localProfile },
+        // Merge companions from bookings if not in user object
+        companions: u.companions || (bookings.find(b => b.email === u.email)?.companions || [])
+      };
+    }).filter(u => {
       if (!q) return true;
       const name = (u.name || "").toLowerCase();
       const email = (u.email || "").toLowerCase();
       const nat = (u.nationality || "").toLowerCase();
       return name.includes(q) || email.includes(q) || nat.includes(q);
     });
+
 
     filtered.sort((a,b)=> new Date(b.joined||0) - new Date(a.joined||0));
     const el = document.getElementById("customersList");
